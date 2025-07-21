@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="HarveyNorman_Promotional::Product" title="Product" sortOrder="10">
+                    <resource id="HarveyNorman_Promotional::Product_save" title="Save Product" sortOrder="10"/>
+                    <resource id="HarveyNorman_Promotional::Product_delete" title="Delete Product" sortOrder="20"/>
+                    <resource id="HarveyNorman_Promotional::Product_update" title="Update Product" sortOrder="30"/>
+                    <resource id="HarveyNorman_Promotional::Product_view" title="View Product" sortOrder="40"/>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
