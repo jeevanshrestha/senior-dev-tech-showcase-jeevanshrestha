@@ -9,12 +9,15 @@ use HarveyNorman\Promotional\Api\Data\ProductSearchResultsInterfaceFactory;
 use HarveyNorman\Promotional\Api\ProductRepositoryInterface;
 use HarveyNorman\Promotional\Model\ResourceModel\Product as ResourceProduct;
 use HarveyNorman\Promotional\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
+use Magento\Bundle\Block\Adminhtml\Catalog\Product\Edit\Tab\Bundle\Option\Search;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Api\SearchCriteriaInterface; 
+use Magento\Framework\Api\SearchResultsInterface;
 
-class ProductRepository implements ProductRepositoryInterface
+class ProductRepository implements  ProductRepositoryInterface
 {
 
     /**
@@ -64,10 +67,12 @@ class ProductRepository implements ProductRepositoryInterface
         $this->collectionProcessor = $collectionProcessor;
     }
 
-    /**
+    /** 
+     * @param Product $product
      * @inheritDoc
+     * @throws CouldNotSaveException
      */
-    public function save(ProductInterface $product)
+    public function save(ProductInterface $product): ProductInterface
     {
         try {
             $this->resource->save($product);
@@ -83,7 +88,7 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function get($productId)
+    public function get($productId): ProductInterface
     {
         $product = $this->productFactory->create();
         $this->resource->load($product, $productId);
@@ -97,8 +102,9 @@ class ProductRepository implements ProductRepositoryInterface
      * @inheritDoc
      */
     public function getList(
-        \Magento\Framework\Api\SearchCriteriaInterface $criteria
-    ) {
+       SearchCriteriaInterface $criteria
+    ):  SearchResultsInterface
+    {
         $collection = $this->productCollectionFactory->create();
         
         $this->collectionProcessor->process($criteria, $collection);
@@ -119,7 +125,7 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function delete(ProductInterface $product)
+    public function delete(ProductInterface $product): bool
     {
         try {
             $productModel = $this->productFactory->create();
@@ -137,9 +143,22 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function deleteById($productId)
+    public function deleteById($productId): bool
     {
         return $this->delete($this->get($productId));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getById(int $productId): ProductInterface
+    {
+        $product = $this->productFactory->create();
+        $this->resource->load($product, $productId);
+        if (!$product->getId()) {
+            throw new NoSuchEntityException(__('Product with id "%1" does not exist.', $productId));
+        }
+        return $product;
     }
 }
 

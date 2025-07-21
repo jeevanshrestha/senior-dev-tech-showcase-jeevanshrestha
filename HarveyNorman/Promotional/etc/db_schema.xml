@@ -1,36 +1,46 @@
 <?xml version="1.0" ?>
-<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="harveynorman_promotional_product" resource="default" engine="innodb" comment="harveynorman_promotional_product Table">
         <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="product_id"/>
         </constraint>
+
+        <!-- SKU with UNIQUE constraint -->
         <column name="sku" nullable="true" xsi:type="varchar" comment="sku" length="255"/>
-        <index referenceId="HARVEYNORMAN_PROMOTIONAL_PRODUCT_SKU" indexType="btree">
+        <constraint xsi:type="unique" referenceId="HARVEYNORMAN_PROMOTIONAL_PRODUCT_SKU_UNIQUE">
             <column name="sku"/>
-        </index>
+        </constraint>
+
         <column name="name" nullable="true" xsi:type="varchar" comment="name" length="255"/>
         <index referenceId="HARVEYNORMAN_PROMOTIONAL_PRODUCT_NAME" indexType="btree">
             <column name="name"/>
         </index>
-        <column name="price" nullable="true" xsi:type="decimal" comment="price" precision="12" scale="4"/>
+
+        <column name="price" nullable="true" xsi:type="decimal" comment="price" precision="12" scale="2"/>
         <index referenceId="HARVEYNORMAN_PROMOTIONAL_PRODUCT_PRICE" indexType="btree">
             <column name="price"/>
         </index>
-        <column name="discount_percentage" nullable="true" xsi:type="decimal" comment="discount_percentage" precision="12" scale="4"/>
+
+        <column name="discount_percentage" nullable="true" xsi:type="decimal" comment="discount_percentage" precision="5" scale="2"/>
         <index referenceId="HARVEYNORMAN_PROMOTIONAL_PRODUCT_DISCOUNT_PERCENTAGE" indexType="btree">
             <column name="discount_percentage"/>
         </index>
+
         <column name="start_date" nullable="true" xsi:type="datetime" comment="start_date"/>
         <index referenceId="HARVEYNORMAN_PROMOTIONAL_PRODUCT_START_DATE" indexType="btree">
             <column name="start_date"/>
         </index>
+
         <column name="end_date" nullable="true" xsi:type="datetime" comment="end_date"/>
         <column name="promotion_status" nullable="true" xsi:type="boolean" comment="promotion_status"/>
+
         <column name="created_at" nullable="true" xsi:type="datetime" comment="created_at" default="CURRENT_TIMESTAMP" on_update="true"/>
         <index referenceId="HARVEYNORMAN_PROMOTIONAL_PRODUCT_CREATED_AT" indexType="btree">
             <column name="created_at"/>
         </index>
+
         <column name="updated_at" nullable="true" xsi:type="datetime" comment="updated_at" default="CURRENT_TIMESTAMP" on_update="true"/>
         <index referenceId="HARVEYNORMAN_PROMOTIONAL_PRODUCT_UPDATED_AT" indexType="btree">
             <column name="updated_at"/>

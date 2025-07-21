@@ -1,0 +1,172 @@
+<?xml version="1.0" ?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">
+                harveynorman_promotional_product_listing.harveynorman_promotional_product_listing_data_source
+            </item>
+        </item>
+    </argument>
+
+    <settings>
+        <spinner>harveynorman_promotional_product_columns</spinner>
+        <deps>
+            <dep>harveynorman_promotional_product_listing.harveynorman_promotional_product_listing_data_source</dep>
+        </deps>
+        <buttons>
+            <button name="add">
+                <url path="*/*/new"/>
+                <class>primary</class>
+                <label translate="true">Add New Product</label>
+            </button>
+        </buttons>
+    </settings>
+
+    <dataSource name="harveynorman_promotional_product_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">product_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>HarveyNorman_Promotional::Product</aclResource>
+        <dataProvider name="harveynorman_promotional_product_listing_data_source"
+                      class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>product_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <massaction name="listing_massaction"
+                component="Magento_Ui/js/grid/massactions"
+                class="Magento\Ui\Component\MassAction">
+        <action name="enable">
+            <settings>
+                <type>enable</type>
+                <label translate="true">Enable Selected</label>
+                <url path="harveynorman_promotional/product/massStatus">
+                    <param name="status">1</param>
+                </url>
+                <confirm>
+                    <title translate="true">Enable Promotions</title>
+                    <message translate="true">Are you sure you want to enable promotions for the selected items?</message>
+                </confirm>
+            </settings>
+        </action>
+
+        <action name="disable">
+            <settings>
+                <type>disable</type>
+                <label translate="true">Disable Selected</label>
+                <url path="harveynorman_promotional/product/massStatus">
+                    <param name="status">0</param>
+                </url>
+                <confirm>
+                    <title translate="true">Disable Promotions</title>
+                    <message translate="true">Are you sure you want to disable promotions for the selected items?</message>
+                </confirm>
+            </settings>
+        </action>
+
+        <action name="delete">
+            <settings>
+                <type>delete</type>
+                <label translate="true">Delete Selected</label>
+                <url path="harveynorman_promotional/product/massDelete"/>
+                <confirm>
+                    <title translate="true">Delete items</title>
+                    <message translate="true">Are you sure you want to delete the selected items?</message>
+                </confirm>
+            </settings>
+        </action>
+    </massaction>
+
+    <columns name="harveynorman_promotional_product_columns">
+
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>product_id</indexField>
+            </settings>
+        </selectionsColumn>
+
+        <column name="product_id">
+            <settings>
+                <filter>text</filter>
+                <sorting>asc</sorting>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+
+        <column name="sku">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">SKU</label>
+                <editor>
+                    <editorType>text</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">false</rule>
+                    </validation>
+                </editor>
+            </settings>
+        </column>
+
+        <column name="name">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Name</label>
+                <editor>
+                    <editorType>text</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">false</rule>
+                    </validation>
+                </editor>
+            </settings>
+        </column>
+
+        <column name="price">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Price</label>
+                <editor>
+                    <editorType>text</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">false</rule>
+                    </validation>
+                </editor>
+            </settings>
+        </column>
+
+        <column name="promotion_status" class="HarveyNorman\Promotional\Ui\Component\Listing\Column\PromotionStatus">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Promotion Status</label>
+                <options class="HarveyNorman\Promotional\Model\Config\Source\Status"/>
+                <dataType>select</dataType>
+                <sortable>false</sortable>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions" class="HarveyNorman\Promotional\Ui\Component\Listing\Column\ProductActions">
+            <settings>
+                <indexField>product_id</indexField>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>107</resizeDefaultWidth>
+            </settings>
+        </actionsColumn>
+
+    </columns>
+</listing>

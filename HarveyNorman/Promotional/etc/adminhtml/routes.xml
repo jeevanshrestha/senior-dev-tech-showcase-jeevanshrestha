@@ -1,8 +1,9 @@
-<?xml version="1.0" ?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
 	<router id="admin">
-		<route frontName="promotional" id="promotional">
-			<module before="Magento_Backend" name="HarveyNorman_Promotional"/>
+		<route id="harveynorman_promotional" frontName="harveynorman_promotional">
+			<module name="HarveyNorman_Promotional" before="Magento_Backend" />
 		</route>
 	</router>
 </config>

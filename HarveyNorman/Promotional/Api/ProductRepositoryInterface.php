@@ -1,10 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace HarveyNorman\Promotional\Api\Data;
+namespace HarveyNorman\Promotional\Api;
 
 use \HarveyNorman\Promotional\Api\Data\ProductInterface;
 use \Magento\Framework\Api\SearchCriteriaInterface;
+use \Magento\Framework\Api\SearchResultsInterface;
+/**
+ * Interface for product repository.
+ */
 interface ProductRepositoryInterface
 {
     /**
@@ -42,5 +46,5 @@ interface ProductRepositoryInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getList( SearchCriteriaInterface $searchCriteria);
+    public function getList( SearchCriteriaInterface $searchCriteria): SearchResultsInterface;
 }

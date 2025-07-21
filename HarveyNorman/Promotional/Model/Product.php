@@ -223,4 +223,33 @@ class Product extends AbstractModel implements ProductInterface
         return $this->setData(self::UPDATED_AT, $updatedAt);
     }
 
+    /**
+     * Get discounted price based on promotion rules
+     *
+     * @return float
+     */
+    public function getDiscountedPrice(): float
+    {
+        $price = $this->getPrice();
+        $discount = $this->getDiscountPercentage();
+        $status = $this->getPromotionStatus();
+
+        // Validate discount eligibility
+        if (!$status || $discount <= 0) {
+            return $price;
+        }
+
+        $now = new \DateTime();
+        $startDate = new \DateTime($this->getStartDate());
+        $endDate = new \DateTime($this->getEndDate());
+
+        if ($now < $startDate || $now > $endDate) {
+            return $price;
+        }
+
+        $discounted = $price - ($price * ($discount / 100));
+        return round($discounted, 2);
+    }
+
+
 }

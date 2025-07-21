@@ -1,0 +1,171 @@
+<?xml version="1.0" ?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">harveynorman_promotional_product_form.product_form_data_source</item>
+		</item>
+		<item name="label" xsi:type="string" translate="true">General Information</item>
+		<item name="template" xsi:type="string">templates/form/collapsible</item>
+	</argument>
+	<settings>
+		<buttons>
+			<button name="back" class="HarveyNorman\Promotional\Block\Adminhtml\Product\Edit\BackButton"/>
+			<button name="delete" class="HarveyNorman\Promotional\Block\Adminhtml\Product\Edit\DeleteButton"/>
+			<button name="save" class="HarveyNorman\Promotional\Block\Adminhtml\Product\Edit\SaveButton"/>
+			<button name="save_and_continue" class="HarveyNorman\Promotional\Block\Adminhtml\Product\Edit\SaveAndContinueButton"/>
+		</buttons>
+		<namespace>harveynorman_promotional_product_form</namespace>
+		<dataScope>data</dataScope>
+		<deps>
+			<dep>harveynorman_promotional_product_form.product_form_data_source</dep>
+		</deps>
+	</settings>
+	<dataSource name="product_form_data_source">
+		<argument name="data" xsi:type="array">
+			<item name="js_config" xsi:type="array">
+				<item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+			</item>
+		</argument>
+		<settings>
+			<submitUrl path="*/*/save"/>
+		</settings>
+		<dataProvider name="product_form_data_source" class="HarveyNorman\Promotional\Model\Product\DataProvider">
+			<settings>
+				<requestFieldName>product_id</requestFieldName>
+				<primaryFieldName>product_id</primaryFieldName>
+			</settings>
+		</dataProvider>
+	</dataSource>
+	<fieldset name="general">
+		<settings>
+			<label>General</label>
+		</settings>
+
+		<field name="sku" formElement="input" sortOrder="2">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">Product</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">SKU</label>
+				<dataScope>sku</dataScope>
+				<required>true</required>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+		</field>
+
+		<field name="name" formElement="input" sortOrder="3">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">Product</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Name</label>
+				<dataScope>name</dataScope>
+				<required>true</required>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+		</field>
+
+		<field name="price" formElement="input" sortOrder="4">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">Product</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>number</dataType>
+				<label translate="true">Price</label>
+				<dataScope>price</dataScope>
+				<required>true</required>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+		</field>
+
+		<field name="discount_percentage" formElement="input" sortOrder="5">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">Product</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>number</dataType>
+				<label translate="true">Discount Percentage</label>
+				<dataScope>discount_percentage</dataScope>
+				<required>true</required>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+					<rule name="validate-number" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+		</field>
+
+		<field name="start_date" formElement="date" sortOrder="6">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">Product</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>date</dataType>
+				<label translate="true">Start Date</label>
+				<dataScope>start_date</dataScope>
+				<required>true</required>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+		</field>
+
+		<field name="end_date" formElement="date" sortOrder="7">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">Product</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>date</dataType>
+				<label translate="true">End Date</label>
+				<dataScope>end_date</dataScope>
+				<required>true</required>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+		</field>
+
+		<field name="promotion_status" formElement="select" sortOrder="8">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="source" xsi:type="string">Product</item>
+				</item>
+			</argument>
+			<settings>
+				<dataType>text</dataType>
+				<label translate="true">Promotion Status</label>
+				<dataScope>promotion_status</dataScope>
+				<required>true</required>
+				<validation>
+					<rule name="required-entry" xsi:type="boolean">true</rule>
+				</validation>
+			</settings>
+			<formElements>
+				<select>
+					<settings>
+						<options class="HarveyNorman\Promotional\Model\Config\Source\Status"/>
+					</settings>
+				</select>
+			</formElements>
+		</field>
+	</fieldset>
+</form>

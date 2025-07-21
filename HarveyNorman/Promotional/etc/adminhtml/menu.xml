@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="HarveyNorman_Promotional::promotional_root"
+			 title="Promotional"
+			 module="HarveyNorman_Promotional"
+			 sortOrder="10"
+			 parent="Magento_Backend::marketing"
+			 resource="HarveyNorman_Promotional::promotional_root"/>
+
+		<add id="HarveyNorman_Promotional::promotional_products"
+			 title="Promotional Products"
+			 module="HarveyNorman_Promotional"
+			 sortOrder="100"
+			 parent="HarveyNorman_Promotional::promotional_root"
+			 resource="HarveyNorman_Promotional::Product"
+			 action="harveynorman_promotional/product/index"/>
+	</menu>
+</config>

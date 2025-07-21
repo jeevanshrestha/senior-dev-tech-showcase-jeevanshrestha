@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+      layout="2columns-left">
+    <body>        
+       <referenceBlock name="product.search">
+			<block class="HarveyNorman\Promotional\Block\Product\Search" name="product.search" as="product_search" template="HarveyNorman_Promotional::product/search.phtml"/>
+		</referenceBlock>
+		<referenceContainer name="content">
+			<block name="product.search" class="HarveyNorman\Promotional\Block\Product\Search" template="HarveyNorman_Promotional::product/search.phtml"/>
+		</referenceContainer>
+	
+    </body>
+</page>

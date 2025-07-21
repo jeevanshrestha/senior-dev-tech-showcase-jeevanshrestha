@@ -2,6 +2,9 @@
 declare(strict_types=1);
 namespace HarveyNorman\Promotional\Api\Data;
 
+/**
+ *
+ */
 interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
 
@@ -154,4 +157,5 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
     public function setUpdatedAt(string $updatedAt): self;
 
 
+    public function getDiscountedPrice(): float;
 }
