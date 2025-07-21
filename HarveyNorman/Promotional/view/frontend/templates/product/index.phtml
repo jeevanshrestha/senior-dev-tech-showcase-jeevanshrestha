@@ -4,8 +4,166 @@
  */
 ?>
 <div>
-	<?= $block->index() ?>
-	<?= __('Data From HarveyNorman_Promotional::product/index.phtml') ?>
+    <?php
+    /** @var \HarveyNorman\Promotional\Block\Product\Index $block */
+    $products = $block->getProducts();
+    ?>
+
+    <div class="promotional-products-container">
+        <!-- Search Form -->
+        <div class="promotional-search-form">
+            <form action="<?= $block->escapeUrl($block->getUrl('promotional/product/search')) ?>" method="get">
+                <div class="search-input-container">
+                    <input type="text"
+                           name="q"
+                           placeholder="Search promotional products..."
+                           class="search-input"
+                           value="<?= $block->escapeHtml($block->getRequest()->getParam('q')) ?>">
+                    <button type="submit" class="search-button">
+                        <span>Search</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <h2>Promotional Products</h2>
+        <ul class="promotional-products-grid">
+            <?php foreach ($products as $product): ?>
+                <?php
+                $originalPrice = (float)$product->getPrice();
+                $discount = (float)$product->getDiscountPercentage();
+                $discountedPrice = $product->getDiscountedPrice();
+
+                $promotionStatus = ((int)$product->getPromotionStatus() === 1) ? 'Enabled' : 'Disabled';
+
+                $startDate = $product->getStartDate()
+                    ? (new \DateTime($product->getStartDate()))->format('d/m/Y')
+                    : 'N/A';
+
+                $endDate = $product->getEndDate()
+                    ? (new \DateTime($product->getEndDate()))->format('d/m/Y')
+                    : 'N/A';
+                ?>
+                <li class="promotional-product-card <?=strtolower($promotionStatus) ?>">
+                    <div class="product-details">
+                        <h3><?= $product->getName() ?></h3>
+                        <p><strong>SKU:</strong> <?= $product->getSku() ?></p>
+                        <p><strong>Original Price:</strong> $<?= number_format($originalPrice, 2) ?></p>
+                        <p><strong>Discounted Price:</strong> $<?= number_format($discountedPrice, 2) ?></p>
+                        <p><strong>Discount:</strong> <?= $discount ?>%</p>
+                        <p><strong>Status:</strong> <?= $promotionStatus ?></p>
+                        <p><strong>Promotion:</strong> <?= $startDate ?> to <?= $endDate ?></p>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <!-- Pager -->
+        <div class="toolbar bottom"><?= $block->getChildHtml('pager'); ?></div>
+    </div>
+
 </div>
 
- 
+<style>
+    /* Search Form Styles */
+    .promotional-search-form {
+        margin-bottom: 30px;
+        max-width: 600px;
+    }
+
+    .search-input-container {
+        display: flex;
+        width: 100%;
+    }
+
+    .search-input {
+        flex-grow: 1;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px 0 0 4px;
+        font-size: 16px;
+    }
+
+    .search-button {
+        padding: 0px 30px;
+        background-color: #1979c3;
+        color: white;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.3s;
+    }
+
+    .search-button:hover {
+        background-color: #006bb4;
+    }
+
+
+    .promotional-products-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .promotional-product-card {
+        border: 1px solid #ddd;
+        padding: 15px;
+        background: #fff;
+        box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+        border-radius: 4px;
+    }
+
+    .promotional-product-card h3 {
+        margin-top: 0;
+        font-size: 1.2em;
+    }
+
+    @media (max-width: 768px) {
+        .promotional-products-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .promotional-products-grid {
+            grid-template-columns: 1fr;
+        }
+        .search-input-container {
+            flex-direction: column;
+        }
+        .search-input {
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .search-button {
+            border-radius: 4px;
+        }
+    }
+
+    .product-details {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 15px;
+        height: 85%;
+    }
+
+    .enabled {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 5px 10px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .disabled {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 5px 10px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+</style>

@@ -3,28 +3,48 @@ declare(strict_types=1);
 
 namespace HarveyNorman\Promotional\Block\Product;
 
-class Index extends \Magento\Framework\View\Element\Template
-{
+use Magento\Framework\View\Element\Template;
+use HarveyNorman\Promotional\Model\ResourceModel\Product\CollectionFactory;
 
-    /**
-     * Constructor
-     *
-     * @param \Magento\Framework\View\Element\Template\Context  $context
-     * @param array $data
-     */
+class Index extends Template
+{
+    protected CollectionFactory $productCollectionFactory;
+
+    protected ?int $pageSize = null;
+    protected ?int $currentPage = null;
+
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
+        Template\Context $context,
+        CollectionFactory $productCollectionFactory,
         array $data = []
     ) {
         parent::__construct($context, $data);
+        $this->productCollectionFactory = $productCollectionFactory;
+
+        $this->pageSize = isset($data['page_size']) ? (int)$data['page_size'] : 20;
+        $this->currentPage = (int)$this->getRequest()->getParam('p', 1);
     }
 
     /**
-     * @return string
+     * Get paginated promotional products
+     *
+     * @return \HarveyNorman\Promotional\Model\ResourceModel\Product\Collection
      */
-    public function index()
-    { 
-        return __('Welcome to the Promotional Products Index Page');
-    }
-}
+    public function getProducts()
+    {
+        $collection = $this->productCollectionFactory->create();
+        $collection->setPageSize($this->pageSize);
+        $collection->setCurPage((int)$this->currentPage);
 
+        // Assign collection to pager child block
+        if ($pager = $this->getChildBlock('pager')) {
+            $pager->setLimit($this->pageSize)
+                ->setCollection($collection);
+        }
+
+        $collection->load();
+
+        return $collection;
+    }
+
+}
