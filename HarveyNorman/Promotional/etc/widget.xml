@@ -11,7 +11,7 @@
                 <options>
                     <option name="default" value="HarveyNorman_Promotional::widget/promotions.phtml">
                         <label translate="true">Default Template</label>
-                    </option> 
+                    </option>
                 </options>
             </parameter>
 

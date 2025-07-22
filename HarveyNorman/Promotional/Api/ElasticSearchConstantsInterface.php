@@ -8,5 +8,5 @@ interface ElasticSearchConstantsInterface
     public const INDEX_TEMPLATE_NAME = 'promotional_index_template';
     public const INDEX_NAME = 'promotional_index_1';
 
-    public const SEARCHABLE_FIELDS = ['sku', 'name'];
+    public const SEARCHABLE_FIELDS = ['sku', 'name^2'];
 }

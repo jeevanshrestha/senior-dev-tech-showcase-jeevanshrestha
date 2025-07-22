@@ -3,7 +3,7 @@
 		xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
 	<menu>
 		<add id="HarveyNorman_Promotional::promotional_root"
-			 title="Promotional"
+			 title="Harvey Norman"
 			 module="HarveyNorman_Promotional"
 			 sortOrder="10"
 			 parent="Magento_Backend::marketing"

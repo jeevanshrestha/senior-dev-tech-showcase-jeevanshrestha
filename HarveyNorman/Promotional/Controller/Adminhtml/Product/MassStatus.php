@@ -43,7 +43,9 @@ class MassStatus extends Action
                 $promoProduct->setData('promotion_status', (int) $status);
                 $promoProduct->save();
 
+                //Add to queue for elasticsearch reindex
                 $this->queuePublisher->publish($promoProduct);
+
                 $successCount++;
             } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage(

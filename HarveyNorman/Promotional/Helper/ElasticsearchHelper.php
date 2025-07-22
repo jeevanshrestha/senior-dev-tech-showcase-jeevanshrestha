@@ -143,6 +143,29 @@ class ElasticsearchHelper implements ElasticSearchConstantsInterface
         }
     }
 
+    
+    /**
+     * Delete all documents from Elasticsearch index
+     */
+    public function deleteAll(): void
+    {
+        $params = [
+            'index' => self::INDEX_NAME,
+            'body' => [
+                'query' => [
+                    'match_all' => new \stdClass(), // or simply []
+                ],
+            ],
+        ];
+
+        try {
+            $response = $this->client->deleteByQuery($params);
+            $this->logger->info('Deleted all documents from Elasticsearch', ['response' => $response]);
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to delete all documents: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Perform a multi_match search in Elasticsearch and return matching document IDs.
      *
@@ -162,7 +185,7 @@ class ElasticsearchHelper implements ElasticSearchConstantsInterface
                         'query' => $query,
                         'fields' => self::SEARCHABLE_FIELDS,
                         'type' => 'most_fields',
-                        'fuzziness' => 1,
+                        'fuzziness' => 2,
                         'tie_breaker' => 0.2,
                     ],
                 ],

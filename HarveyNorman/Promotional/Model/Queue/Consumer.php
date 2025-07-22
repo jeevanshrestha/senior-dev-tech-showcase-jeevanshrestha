@@ -58,8 +58,18 @@ class Consumer
 
     private function handleDelete(array $data): void
     {
-        $this->logger->info('Processing product deletion', ['sku' => $data['sku'] ?? '']);
+        try {
+            if (empty($data['id'])) {
+                throw new \InvalidArgumentException('Missing required delete field: id');
+            }
+
+            $this->elasticHelper->deleteDocumentById((string) $data['id']);
+            $this->logger->info('Successfully deleted product from Elasticsearch', ['id' => $data['id']]);
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to delete document: ' . $e->getMessage(), ['data' => $data]);
+        }
     }
+
 
     private function handleTest(array $data): void
     {

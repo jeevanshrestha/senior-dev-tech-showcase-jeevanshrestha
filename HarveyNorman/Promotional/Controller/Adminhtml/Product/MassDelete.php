@@ -10,6 +10,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Controller\ResultInterface;
+use HarveyNorman\Promotional\Model\Queue\ProductDeletePublisher;
 
 class MassDelete extends Action
 {
@@ -26,21 +27,26 @@ class MassDelete extends Action
     /**
      * @var CollectionFactory
      */
-    protected CollectionFactory $collectionFactory;
+    protected  CollectionFactory $collectionFactory;
+
+    private ProductDeletePublisher $productDeletePublisher;
 
     /**
      * @param Context $context
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
+     * @param ProductDeletePublisher $productDeletePublisher
      */
     public function __construct(
         Context $context,
         Filter $filter,
-        CollectionFactory $collectionFactory
+        CollectionFactory $collectionFactory,
+        ProductDeletePublisher $productDeletePublisher
     ) {
         parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
+        $this->productDeletePublisher = $productDeletePublisher;
     }
 
     /**
@@ -58,6 +64,9 @@ class MassDelete extends Action
             foreach ($collection as $item) {
                 $item->delete();
                 $deleted++;
+
+                // Add product id to Mq to delete data in Elastic Search
+                $this->productDeletePublisher->publish($item);
             }
 
             if ($deleted) {

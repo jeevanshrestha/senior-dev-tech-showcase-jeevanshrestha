@@ -10,6 +10,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
+use HarveyNorman\Promotional\Model\Queue\ProductDeletePublisher;
 
 class Delete extends Product implements HttpPostActionInterface
 {
@@ -24,18 +25,26 @@ class Delete extends Product implements HttpPostActionInterface
     protected $coreRegistry;
 
     /**
+     * @var ProductDeletePublisher
+     */
+    private  $productDeletePublisher;
+
+    /**
      * @param \Magento\Backend\App\Action\Context $context  
      * @param \Magento\Framework\Registry $coreRegistry     
      * @param ProductFactory $productFactory
+     * @param ProductDeletePublisher $productDeletePublisher
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context, 
+        \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Registry $coreRegistry,
-        ProductFactory $productFactory
+        ProductFactory $productFactory,
+        ProductDeletePublisher $productDeletePublisher
     ) {
         parent::__construct($context, $coreRegistry);
         $this->productFactory = $productFactory;
         $this->coreRegistry = $coreRegistry;
+        $this->productDeletePublisher = $productDeletePublisher;
     }
 
     /**
@@ -58,6 +67,10 @@ class Delete extends Product implements HttpPostActionInterface
                 }
 
                 $product->delete();
+                
+                //Add product id to Mq to delete data in Elastic Search
+                $this->productDeletePublisher->publish($product);
+                
                 $this->messageManager->addSuccessMessage(__('You deleted the product.'));
                 return $resultRedirect->setPath('*/*/');
             } catch (LocalizedException $e) {

@@ -11,6 +11,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use HarveyNorman\Promotional\Helper\Validation;
+use HarveyNorman\Promotional\Model\Queue\ProductQueuePublisher;
 
 class Save extends Action implements HttpPostActionInterface
 {
@@ -28,24 +29,34 @@ class Save extends Action implements HttpPostActionInterface
      * @var Validation
      */
     protected Validation $validationHelper;
+
     /**
+     * @var ProductQueuePublisher
+     */
+    protected ProductQueuePublisher $queuePublisher;
+
+    /**
+     *
      * Save constructor.
      *
      * @param Action\Context $context
      * @param ProductFactory $productFactory
      * @param DataPersistorInterface $dataPersistor
      * @param Validation $validationHelper
+     * @param ProductQueuePublisher $queuePublisher
      */
     public function __construct(
         Action\Context $context,
         ProductFactory $productFactory,
         DataPersistorInterface $dataPersistor,
-        Validation $validationHelper    
+        Validation $validationHelper,
+        ProductQueuePublisher $queuePublisher   
     ) {
         parent::__construct($context);
         $this->productFactory = $productFactory;
         $this->dataPersistor = $dataPersistor;
         $this->validationHelper = $validationHelper;
+        $this->queuePublisher = $queuePublisher;
     }
  
 
@@ -94,6 +105,10 @@ class Save extends Action implements HttpPostActionInterface
 
         try {
             $model->save();
+
+            //Add to queue for elasticsearch reindex
+            $this->queuePublisher->publish($model);
+
             $this->messageManager->addSuccessMessage(__('You saved the product.'));
             $this->dataPersistor->clear('harveynorman_promotional_product');
 
