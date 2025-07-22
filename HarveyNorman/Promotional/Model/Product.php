@@ -5,16 +5,31 @@ namespace HarveyNorman\Promotional\Model;
 
 use Magento\Framework\Model\AbstractModel;
 use HarveyNorman\Promotional\Api\Data\ProductInterface;
-use \HarveyNorman\Promotional\Model\ResourceModel\Product as ProductResourceModel; 
+use \HarveyNorman\Promotional\Model\ResourceModel\Product as ProductResourceModel;
+use HarveyNorman\Promotional\Model\Service\DiscountedPrice;
+use HarveyNorman\Promotional\Model\Service\PromotionEligibility;
 
 class Product extends AbstractModel implements ProductInterface
 {
+    
+    private PromotionEligibility $promotionEligibility;
+    private DiscountedPrice $discountedPrice;
+  
     /**
      * Define resource model
      */
-    protected function _construct()
+    protected function _construct(): void
     {
         $this->_init(ProductResourceModel::class);
+    }
+
+    public function __construct(
+        PromotionEligibility $promotionEligibility,
+        DiscountedPrice $discountedPrice
+    ) {
+        $this->promotionEligibility = $promotionEligibility;
+        $this->discountedPrice = $discountedPrice;
+        parent::__construct();
     }
 
     /**
@@ -221,35 +236,15 @@ class Product extends AbstractModel implements ProductInterface
     public function setUpdatedAt(string $updatedAt): ProductInterface
     {
         return $this->setData(self::UPDATED_AT, $updatedAt);
-    }
+    } 
 
-    /**
-     * Get discounted price based on promotion rules
-     *
-     * @return float
-     */
+    public function isEligibleForPromotion(): bool
+    {
+        return $this->promotionEligibility->isEligible($this);
+    }
+    
     public function getDiscountedPrice(): float
     {
-        $price = $this->getPrice();
-        $discount = $this->getDiscountPercentage();
-        $status = $this->getPromotionStatus();
-
-        // Validate discount eligibility
-        if (!$status || $discount <= 0) {
-            return $price;
-        }
-
-        $now = new \DateTime();
-        $startDate = new \DateTime($this->getStartDate());
-        $endDate = new \DateTime($this->getEndDate());
-
-        if ($now < $startDate || $now > $endDate) {
-            return $price;
-        }
-
-        $discounted = $price - ($price * ($discount / 100));
-        return round($discounted, 2);
+        return $this->discountedPrice->getDiscountedPrice($this);
     }
-
-
 }

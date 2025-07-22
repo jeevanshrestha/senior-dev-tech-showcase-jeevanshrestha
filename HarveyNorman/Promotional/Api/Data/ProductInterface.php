@@ -3,12 +3,10 @@ declare(strict_types=1);
 namespace HarveyNorman\Promotional\Api\Data;
 
 /**
- *
+ * Product Interface for Service Contract
  */
 interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
-
-
 
     const PRODUCT_ID = 'product_id';
     const SKU = 'sku';
@@ -71,12 +69,14 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return string
      */
     public function getEndDate(): string;
+
     /**
      * Get created at timestamp
      *
      * @return string
      */
     public function getCreatedAt(): string;
+
     /**
      * Get updated at timestamp
      *
@@ -91,6 +91,7 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return self
      */
     public function setProductId(int $productId): self;
+
     /**
      * Set SKU
      *
@@ -98,6 +99,7 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return self
      */
     public function setSku(string $sku): self;
+
     /**
      * Set product name
      *
@@ -105,6 +107,7 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return self
      */
     public function setName(string $name): self;
+
     /**
      * Set product price
      *
@@ -112,6 +115,7 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return self
      */
     public function setPrice(string $price): self;
+
     /**
      * Set promotion status
      *
@@ -119,6 +123,7 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return self
      */
     public function setPromotionStatus(string $promotionStatus): self;
+
     /**
      * Set discount percentage
      *
@@ -126,6 +131,7 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return self
      */
     public function setDiscountPercentage(string $discountPercentage): self;
+
     /**
      * Set start date of promotion
      *
@@ -141,6 +147,7 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return self
      */                             
     public function setEndDate(string $endDate): self;
+
     /**
      * Set created at timestamp
      *
@@ -148,6 +155,7 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      * @return self
      */
     public function setCreatedAt(string $createdAt): self;
+
     /**
      * Set updated at timestamp
      *
@@ -156,6 +164,17 @@ interface ProductInterface extends \Magento\Framework\Api\ExtensibleDataInterfac
      */
     public function setUpdatedAt(string $updatedAt): self;
 
+    /**
+     * Check if product is eligible for promotion.
+     *
+     * @return bool
+     */
+    public function isEligibleForPromotion(): bool;
 
+    /**
+     * Get discounted price if eligible for promotion.
+     *
+     * @return float
+     */
     public function getDiscountedPrice(): float;
 }

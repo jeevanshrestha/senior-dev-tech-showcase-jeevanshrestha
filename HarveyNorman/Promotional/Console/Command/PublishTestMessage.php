@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 
 class PublishTestMessage extends Command
 {
-    private const TOPIC_NAME = 'publisher_test';  // Should match your queue_topology.xml binding
+    private const TOPIC_NAME = 'publisher_test';
 
     public function __construct(
         private readonly PublisherInterface $publisher,
@@ -35,7 +35,7 @@ class PublishTestMessage extends Command
 
         try {
             $this->publishMessage($message);
-            $output->writeln('<info>Successfully published test message</info>');
+            $output->writeln('<info>Successfully published test message.</info>');
             $this->logger->debug('Test message published', ['message' => $message]);
             return Command::SUCCESS;
         } catch (\Exception $e) {

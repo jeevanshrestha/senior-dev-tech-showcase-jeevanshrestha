@@ -10,6 +10,7 @@ use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use HarveyNorman\Promotional\Helper\Validation;
 
 class Save extends Action implements HttpPostActionInterface
 {
@@ -24,19 +25,29 @@ class Save extends Action implements HttpPostActionInterface
     protected DataPersistorInterface $dataPersistor;
 
     /**
+     * @var Validation
+     */
+    protected Validation $validationHelper;
+    /**
+     * Save constructor.
+     *
      * @param Action\Context $context
      * @param ProductFactory $productFactory
      * @param DataPersistorInterface $dataPersistor
+     * @param Validation $validationHelper
      */
     public function __construct(
         Action\Context $context,
         ProductFactory $productFactory,
-        DataPersistorInterface $dataPersistor
+        DataPersistorInterface $dataPersistor,
+        Validation $validationHelper    
     ) {
         parent::__construct($context);
         $this->productFactory = $productFactory;
         $this->dataPersistor = $dataPersistor;
+        $this->validationHelper = $validationHelper;
     }
+ 
 
     /**
      * Save action
@@ -52,6 +63,11 @@ class Save extends Action implements HttpPostActionInterface
         if (!$data) {
             return $resultRedirect->setPath('*/*/');
         }
+
+        $this->validationHelper->validateDates(
+            $this->getRequest()->getParam('start_date'),
+            $this->getRequest()->getParam('end_date')
+        );
 
         $id = (int) $this->getRequest()->getParam('product_id');
         $model = $this->productFactory->create();
