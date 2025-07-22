@@ -4,32 +4,37 @@ declare(strict_types=1);
 namespace HarveyNorman\Promotional\Model;
 
 use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Registry;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Data\Collection\AbstractDb;
 use HarveyNorman\Promotional\Api\Data\ProductInterface;
-use \HarveyNorman\Promotional\Model\ResourceModel\Product as ProductResourceModel;
+use HarveyNorman\Promotional\Model\ResourceModel\Product as ProductResourceModel;
 use HarveyNorman\Promotional\Model\Service\DiscountedPrice;
 use HarveyNorman\Promotional\Model\Service\PromotionEligibility;
 
 class Product extends AbstractModel implements ProductInterface
 {
-    
     private PromotionEligibility $promotionEligibility;
     private DiscountedPrice $discountedPrice;
-  
-    /**
-     * Define resource model
-     */
-    protected function _construct(): void
-    {
-        $this->_init(ProductResourceModel::class);
-    }
 
     public function __construct(
+        Context $context,
+        Registry $registry,
         PromotionEligibility $promotionEligibility,
-        DiscountedPrice $discountedPrice
+        DiscountedPrice $discountedPrice,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
+        array $data = []
     ) {
         $this->promotionEligibility = $promotionEligibility;
         $this->discountedPrice = $discountedPrice;
-        parent::__construct();
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+    }
+
+    protected function _construct(): void
+    {
+        $this->_init(ProductResourceModel::class);
     }
 
     /**
@@ -162,10 +167,13 @@ class Product extends AbstractModel implements ProductInterface
      *
      * @return string
      */
-
     public function getStartDate(): string
     {
-        return $this->getData(self::START_DATE);
+        $startDate = $this->getData(self::START_DATE);
+        if ($startDate === null) {
+            return ''; // or return some default date string if makes sense
+        }
+        return (string)$startDate;
     }
     /**
      * Set start date of promotion
@@ -182,7 +190,11 @@ class Product extends AbstractModel implements ProductInterface
 
     public function getEndDate(): string
     {
-        return $this->getData(self::END_DATE);
+        $endDate = $this->getData(self::END_DATE);
+        if ($endDate === null) {
+            return ''; // or return some default date string if makes sense
+        }
+        return (string)$endDate;
     }
     /**
      * Set end date of promotion

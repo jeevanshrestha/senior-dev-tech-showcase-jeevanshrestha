@@ -64,10 +64,20 @@ class Save extends Action implements HttpPostActionInterface
             return $resultRedirect->setPath('*/*/');
         }
 
-        $this->validationHelper->validateDates(
+        // Retrieve and validate dates
+        $errorMessage = $this->validationHelper->validateDates(
             $this->getRequest()->getParam('start_date'),
             $this->getRequest()->getParam('end_date')
         );
+
+        if ($errorMessage !== null) {
+
+            // Show the validation error to the user
+            $this->messageManager->addErrorMessage(__($errorMessage));
+            $this->dataPersistor->set('harveynorman_promotional_product', $data);
+            return $resultRedirect->setPath('*/*/edit', ['id' => $this->getRequest()->getParam('id')]);
+        }
+
 
         $id = (int) $this->getRequest()->getParam('product_id');
         $model = $this->productFactory->create();

@@ -28,17 +28,19 @@ class Validation
      * @param string|null $endDate
      * @throws LocalizedException
      */
-    public function validateDates(?string $startDate, ?string $endDate): void
+    public function validateDates(?string $startDate, ?string $endDate): ?string
     {
         if (empty($startDate) || empty($endDate)) {
-            throw new LocalizedException(__('Start Date and End Date cannot be empty.'));
+            return (string) __('Start Date and End Date cannot be empty.');
         }
 
         $start = $this->dateTime->timestamp($startDate);
         $end = $this->dateTime->timestamp($endDate);
 
         if ($end < $start) {
-            throw new LocalizedException(__('End Date must be greater than or equal to Start Date.'));
+            return (string) __('End Date must be greater than or equal to Start Date.');
         }
+
+        return null;
     }
 }

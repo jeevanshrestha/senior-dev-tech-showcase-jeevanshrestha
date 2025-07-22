@@ -36,15 +36,23 @@
 
                 $promotionStatus = ((int)$product->getPromotionStatus() === 1) ? 'Enabled' : 'Disabled';
 
-                $startDate = $product->getStartDate()
-                    ? (new \DateTime($product->getStartDate()))->format('d/m/Y')
-                    : 'N/A';
+                $startDateRaw = $product->getStartDate();
+                $endDateRaw = $product->getEndDate();
+                $currentDate = new \DateTime();
 
-                $endDate = $product->getEndDate()
-                    ? (new \DateTime($product->getEndDate()))->format('d/m/Y')
-                    : 'N/A';
+                $startDate = $startDateRaw ? (new \DateTime($startDateRaw)) : null;
+                $endDate = $endDateRaw ? (new \DateTime($endDateRaw)) : null;
+
+                $formattedStartDate = $startDate ? $startDate->format('d/m/Y') : 'N/A';
+                $formattedEndDate = $endDate ? $endDate->format('d/m/Y') : 'N/A';
+
+                $isEligibleForPromotion = $promotionStatus === 'Enabled'
+                    && $startDate && $endDate
+                    && $startDate <= $currentDate && $currentDate <= $endDate;
+
+                $cssClass = $isEligibleForPromotion ? 'eligible' : 'not-eligible';
                 ?>
-                <li class="promotional-product-card <?=strtolower($promotionStatus) ?>">
+                <li class="promotional-product-card <?= $cssClass ?>">
                     <div class="product-details">
                         <h3><?= $product->getName() ?></h3>
                         <p><strong>SKU:</strong> <?= $product->getSku() ?></p>
@@ -52,12 +60,12 @@
                         <p><strong>Discounted Price:</strong> $<?= number_format($discountedPrice, 2) ?></p>
                         <p><strong>Discount:</strong> <?= $discount ?>%</p>
                         <p><strong>Status:</strong> <?= $promotionStatus ?></p>
-                        <p><strong>Promotion:</strong> <?= $startDate ?> to <?= $endDate ?></p>
+                        <p><strong>Promotion Period:</strong> <?= $formattedStartDate ?> to <?= $formattedEndDate ?></p>
+                        <p><strong>Eligible for Promotion:</strong> <?= $isEligibleForPromotion ? 'Yes' : 'No' ?></p>
                     </div>
                 </li>
             <?php endforeach; ?>
         </ul>
-
         <!-- Pager -->
         <div class="toolbar bottom"><?= $block->getChildHtml('pager'); ?></div>
     </div>
@@ -151,19 +159,10 @@
         height: 85%;
     }
 
-    .enabled {
-        background-color: #d4edda;
-        color: #155724;
-        padding: 5px 10px;
-        border-radius: 4px;
-        display: inline-block;
+    .promotional-product-card.eligible {
+        background-color: #d8f5d2; /* light green */
     }
-
-    .disabled {
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 5px 10px;
-        border-radius: 4px;
-        display: inline-block;
+    .promotional-product-card.not-eligible {
+        background-color: #f9d3d3; /* light red */
     }
 </style>
