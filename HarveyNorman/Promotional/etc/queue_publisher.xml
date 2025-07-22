@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_MessageQueue:etc/queue_publisher.xsd">
+
+    <publisher topic="promotional_product_upsert">
+        <connection name="amqp" exchange="harveynorman.promotional.exchange" />
+    </publisher>
+
+    <publisher topic="promotional_product_delete">
+        <connection name="amqp" exchange="harveynorman.promotional.exchange" />
+    </publisher>
+
+    <publisher topic="publisher_test">
+        <connection name="amqp" exchange="harveynorman.promotional.exchange" />
+    </publisher>
+
+</config>

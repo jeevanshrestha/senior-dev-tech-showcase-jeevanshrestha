@@ -17,4 +17,35 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Register Console Command -->
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="harveynorman_promotional_publish_test" xsi:type="object">HarveyNorman\Promotional\Console\Command\PublishTestMessage</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- rabbitmq Producer Command line Class Configuration -->
+    <type name="HarveyNorman\Promotional\Console\Command\PublishTestMessage">
+        <arguments>
+            <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+        </arguments>
+    </type>
+
+    <!-- rabbitmq Consumer Class Configuration -->
+    <type name="HarveyNorman\Promotional\Model\Queue\Consumer">
+        <arguments>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+            <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+
+            <!--
+            <argument name="productRepository" xsi:type="object">Magento\Catalog\Api\ProductRepositoryInterface</argument>
+            <argument name="promoHelper" xsi:type="object">HarveyNorman\Promotional\Helper\Data</argument>
+            -->
+        </arguments>
+    </type>
+
 </config>

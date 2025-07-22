@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_MessageQueue:etc/queue_topology.xsd">
+
+    <exchange name="harveynorman.promotional.exchange" type="topic" connection="amqp" durable="true">
+        <binding id="bind.upsert" topic="promotional_product_upsert" destinationType="queue" destination="harveynorman.promotional.queue" />
+        <binding id="bind.delete" topic="promotional_product_delete" destinationType="queue" destination="harveynorman.promotional.queue" />
+        <binding id="bind.test" topic="publisher_test" destinationType="queue" destination="harveynorman.promotional.queue" />
+    </exchange>
+
+</config>

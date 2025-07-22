@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Communication:etc/communication.xsd">
+    <topic name="promotional_product_upsert" request="string"  />
+    <topic name="promotional_product_delete" request="string" />
+    <topic name="publisher_test"  request="string" />
+</config>

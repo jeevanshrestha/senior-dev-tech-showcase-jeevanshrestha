@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_MessageQueue:etc/queue_consumer.xsd">
+    <consumer name="harveynorman.promotional.consumer"
+              queue="harveynorman.promotional.queue"
+              connection="amqp"
+              handler="HarveyNorman\Promotional\Model\Queue\Consumer::process"
+              consumerInstance="Magento\Framework\MessageQueue\Consumer"
+              maxMessages="100"/>
+</config>
