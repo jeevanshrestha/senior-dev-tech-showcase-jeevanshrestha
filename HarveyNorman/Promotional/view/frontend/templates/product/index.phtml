@@ -27,47 +27,54 @@
         </div>
 
         <h2>Promotional Products</h2>
-        <ul class="promotional-products-grid">
-            <?php foreach ($products as $product): ?>
-                <?php
-                $originalPrice = (float)$product->getPrice();
-                $discount = (float)$product->getDiscountPercentage();
-                $discountedPrice = $product->getDiscountedPrice();
+        <?php if (!empty($products) && is_iterable($products)): ?>
+            <ul class="promotional-products-grid">
+                <?php foreach ($products as $product): ?>
+                    <?php
+                    $originalPrice = (float)$product->getPrice();
+                    $discount = (float)$product->getDiscountPercentage();
+                    $discountedPrice = $product->getDiscountedPrice();
 
-                $promotionStatus = ((int)$product->getPromotionStatus() === 1) ? 'Enabled' : 'Disabled';
+                    $promotionStatus = ((int)$product->getPromotionStatus() === 1) ? 'Enabled' : 'Disabled';
 
-                $startDateRaw = $product->getStartDate();
-                $endDateRaw = $product->getEndDate();
-                $currentDate = new \DateTime();
+                    $startDateRaw = $product->getStartDate();
+                    $endDateRaw = $product->getEndDate();
+                    $currentDate = new \DateTime();
 
-                $startDate = $startDateRaw ? (new \DateTime($startDateRaw)) : null;
-                $endDate = $endDateRaw ? (new \DateTime($endDateRaw)) : null;
+                    $startDate = $startDateRaw ? (new \DateTime($startDateRaw)) : null;
+                    $endDate = $endDateRaw ? (new \DateTime($endDateRaw)) : null;
 
-                $formattedStartDate = $startDate ? $startDate->format('d/m/Y') : 'N/A';
-                $formattedEndDate = $endDate ? $endDate->format('d/m/Y') : 'N/A';
+                    $formattedStartDate = $startDate ? $startDate->format('d/m/Y') : 'N/A';
+                    $formattedEndDate = $endDate ? $endDate->format('d/m/Y') : 'N/A';
 
-                $isEligibleForPromotion = $promotionStatus === 'Enabled'
-                    && $startDate && $endDate
-                    && $startDate <= $currentDate && $currentDate <= $endDate;
+                    $isEligibleForPromotion = $promotionStatus === 'Enabled'
+                        && $startDate && $endDate
+                        && $startDate <= $currentDate && $currentDate <= $endDate;
 
-                $cssClass = $isEligibleForPromotion ? 'eligible' : 'not-eligible';
-                ?>
-                <li class="promotional-product-card <?= $cssClass ?>">
-                    <div class="product-details">
-                        <h3><?= $product->getName() ?></h3>
-                        <p><strong>SKU:</strong> <?= $product->getSku() ?></p>
-                        <p><strong>Original Price:</strong> $<?= number_format($originalPrice, 2) ?></p>
-                        <p><strong>Discounted Price:</strong> $<?= number_format($discountedPrice, 2) ?></p>
-                        <p><strong>Discount:</strong> <?= $discount ?>%</p>
-                        <p><strong>Status:</strong> <?= $promotionStatus ?></p>
-                        <p><strong>Promotion Period:</strong> <?= $formattedStartDate ?> to <?= $formattedEndDate ?></p>
-                        <p><strong>Eligible for Promotion:</strong> <?= $isEligibleForPromotion ? 'Yes' : 'No' ?></p>
-                    </div>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+                    $cssClass = $isEligibleForPromotion ? 'eligible' : 'not-eligible';
+                    ?>
+                    <li class="promotional-product-card <?= $cssClass ?>">
+                        <div class="product-details">
+                            <h3><?= $product->getName() ?></h3>
+                            <p><strong>SKU:</strong> <?= $product->getSku() ?></p>
+                            <p><strong>Original Price:</strong> $<?= number_format($originalPrice, 2) ?></p>
+                            <p><strong>Discounted Price:</strong> $<?= number_format($discountedPrice, 2) ?></p>
+                            <p><strong>Discount:</strong> <?= $discount ?>%</p>
+                            <p><strong>Status:</strong> <?= $promotionStatus ?></p>
+                            <p><strong>Promotion Period:</strong> <?= $formattedStartDate ?> to <?= $formattedEndDate ?></p>
+                            <p><strong>Eligible for Promotion:</strong> <?= $isEligibleForPromotion ? 'Yes' : 'No' ?></p>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <div class="toolbar bottom"><?= $block->getChildHtml('pager'); ?></div>
+        <?php else: ?>
+            <p style="padding: 1rem; background-color: #f8f9fa; color: #333; border-left: 4px solid #ffc107; border-radius: 4px;">
+                <span style="font-weight: bold;">No products found.</span>
+            </p>
+        <?php endif; ?>
         <!-- Pager -->
-        <div class="toolbar bottom"><?= $block->getChildHtml('pager'); ?></div>
+
     </div>
 
 </div>

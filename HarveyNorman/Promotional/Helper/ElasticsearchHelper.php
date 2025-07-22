@@ -152,6 +152,8 @@ class ElasticsearchHelper implements ElasticSearchConstantsInterface
      */
     public function search(string $query, int $size = 50): array
     {
+        $this->logger->debug('[ElasticSearch] Starting search with query: ' . $query . ', size: ' . $size);
+
         $params = [
             'index' => self::INDEX_NAME,
             'body' => [
@@ -160,7 +162,7 @@ class ElasticsearchHelper implements ElasticSearchConstantsInterface
                         'query' => $query,
                         'fields' => self::SEARCHABLE_FIELDS,
                         'type' => 'most_fields',
-                        'fuzziness' => 2,
+                        'fuzziness' => 1,
                         'tie_breaker' => 0.2,
                     ],
                 ],
@@ -169,16 +171,24 @@ class ElasticsearchHelper implements ElasticSearchConstantsInterface
             ],
         ];
 
+        // Log the full search params
+        $this->logger->debug('[ElasticSearch] Search params: ' . json_encode($params));
+
         try {
             $response = $this->client->search($params);
+            $this->logger->debug('[ElasticSearch] Raw response: ' . json_encode($response));
+
             $hits = $response['hits']['hits'] ?? [];
+            $this->logger->debug('[ElasticSearch] Hits count: ' . count($hits));
 
-            // Extract document IDs
             $ids = array_map(fn($hit) => $hit['_id'] ?? null, $hits);
+            $filteredIds = array_filter($ids);
 
-            return array_filter($ids); // Remove nulls if any
+            $this->logger->debug('[ElasticSearch] Extracted IDs: ' . implode(', ', $filteredIds));
+
+            return $filteredIds;
         } catch (\Exception $e) {
-            $this->logger->error('Elasticsearch search failed: ' . $e->getMessage());
+            $this->logger->error('[ElasticSearch] Search failed: ' . $e->getMessage());
             return [];
         }
     }

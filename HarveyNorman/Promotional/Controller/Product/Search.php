@@ -19,8 +19,16 @@ class Search extends Action
         $this->pageFactory = $pageFactory;
     }
 
+
     public function execute()
     {
-        return $this->pageFactory->create();
+        $searchTerm = (string) $this->getRequest()->getParam('q');
+
+        $resultPage = $this->pageFactory->create();
+        $block = $resultPage->getLayout()->getBlock('promotional.product.search');
+        if ($block) {
+            $block->setSearchQuery($searchTerm);
+        }
+        return $resultPage;
     }
 }

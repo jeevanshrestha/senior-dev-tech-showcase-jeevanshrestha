@@ -6,10 +6,7 @@
 		<referenceContainer name="content">
 			<block class="HarveyNorman\Promotional\Block\Product\Search"
 				   name="promotional.product.search"
-				   template="HarveyNorman_Promotional::product/search.phtml">
-				<!-- Set pager block and assign collection later in block class -->
-				<block class="Magento\Theme\Block\Html\Pager" name="promotional.product.pager" as="pager"/>
-			</block>
+				   template="HarveyNorman_Promotional::product/search.phtml"/>
 		</referenceContainer>
 	</body>
 </page>
