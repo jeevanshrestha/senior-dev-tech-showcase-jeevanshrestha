@@ -5,11 +5,12 @@ namespace HarveyNorman\Promotional\Helper;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use HarveyNorman\Promotional\Api\ElasticSearchConstantsInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Psr\Log\LoggerInterface;
 
-class ElasticsearchHelper
+class ElasticsearchHelper implements ElasticSearchConstantsInterface
 {
     private Client $client;
     private ScopeConfigInterface $scopeConfig;
@@ -50,7 +51,7 @@ class ElasticsearchHelper
         $this->logger->info('Starting to create Elasticsearch index template: promotional_index_template');
 
         $params = [
-            'name' => 'promotional_index_template',
+            'name' =>  self::INDEX_TEMPLATE_NAME,
             'body' => [
                 'index_patterns' => ['promotional_*'],
                 'template' => [
@@ -92,7 +93,7 @@ class ElasticsearchHelper
         $this->logger->info('Starting to create Elasticsearch index: promotional_index_1');
 
         $params = [
-            'index' => 'promotional_index_1',
+            'index' => self::INDEX_NAME ,
             'body' => []
         ];
 
@@ -107,4 +108,39 @@ class ElasticsearchHelper
             $this->logger->error('Failed to create Elasticsearch index: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Upsert a document into 'promotional_index_1' with given ID and data
+     */
+    public function upsertDocument(string $id, array $data): void
+    {
+        $params = [
+            'index' =>  self::INDEX_NAME ,
+            'id' => $id,
+            'body' => [
+                'doc' => $data,
+                'doc_as_upsert' => true,
+            ],
+        ];
+
+        $this->client->update($params);
+    }
+
+    /**
+     * Delete a document from Elasticsearch index by ID
+     */
+    public function deleteDocumentById(string $id): void
+    {
+        $params = [
+            'index' => self::INDEX_NAME,
+            'id' => $id,
+        ];
+
+        // Check if document exists before deleting to avoid errors
+        if ($this->client->exists($params)) {
+            $this->client->delete($params);
+        }
+    }
+
+
 }

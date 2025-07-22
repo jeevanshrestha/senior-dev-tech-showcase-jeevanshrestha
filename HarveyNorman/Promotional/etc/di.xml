@@ -59,7 +59,19 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="harveynorman_promotional_elasticsearch_setup" xsi:type="object">HarveyNorman\Promotional\Console\Command\ElasticSearchIndexSetup</item>
+                <item name="harveynorman_promotional_elasticsearch_setup" xsi:type="object">
+                    HarveyNorman\Promotional\Console\Command\ElasticSearchIndexSetup
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="harveynorman_promotional_elasticsearch_reindex" xsi:type="object">
+                    HarveyNorman\Promotional\Console\Command\ElasticSearchReindex
+                </item>
             </argument>
         </arguments>
     </type>
