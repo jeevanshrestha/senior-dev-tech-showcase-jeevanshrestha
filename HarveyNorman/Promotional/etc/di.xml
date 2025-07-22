@@ -40,11 +40,6 @@
         <arguments>
             <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
             <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
-
-            <!--
-            <argument name="productRepository" xsi:type="object">Magento\Catalog\Api\ProductRepositoryInterface</argument>
-            <argument name="promoHelper" xsi:type="object">HarveyNorman\Promotional\Helper\Data</argument>
-            -->
         </arguments>
     </type>
 

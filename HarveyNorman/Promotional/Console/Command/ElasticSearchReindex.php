@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace HarveyNorman\Promotional\Console\Command;
 
+use HarveyNorman\Promotional\Api\QueueTopicInterface;
 use HarveyNorman\Promotional\Model\ResourceModel\Product\CollectionFactory as PromoProductCollectionFactory;
 use Magento\Framework\App\State;
 use Magento\Framework\Console\Cli;
@@ -12,15 +13,16 @@ use Magento\Framework\Serialize\Serializer\Json;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use HarveyNorman\Promotional\Model\Queue\ProductQueuePublisher;
 
-class ElasticSearchReindex extends Command
+class ElasticSearchReindex extends Command implements QueueTopicInterface
 {
-    private const TOPIC_NAME = 'promotional_product_upsert';
+
 
     public function __construct(
         private State $appState,
         private PromoProductCollectionFactory $promoCollectionFactory,
-        private PublisherInterface $publisher,
+        private ProductQueuePublisher $publisher,
         private Json $serializer
     ) {
         parent::__construct();
@@ -46,23 +48,10 @@ class ElasticSearchReindex extends Command
         $output->writeln("<info>Found {$count} promotional products to queue for upsert...</info>");
 
         foreach ($collection as $promoProduct) {
-            $messageData = [
-                'action' => 'upsert',
-                'id' => (string)$promoProduct->getId(),
-                'sku' => $promoProduct->getSku(),
-                'name' => $promoProduct->getName(),
-                'price' => (float)$promoProduct->getPrice(),
-                'discount_percentage' => (float)$promoProduct->getDiscountPercentage(),
-                'start_date' => $promoProduct->getStartDate(),
-                'end_date' => $promoProduct->getEndDate(),
-                'promotion_status' => (bool)$promoProduct->getPromotionStatus(),
-                'isPromotionEligible' => (bool)$promoProduct->getIsPromotionEligible(),
-                'discounted_price' => (float)$promoProduct->getDiscountedPrice(),
-            ];
+
 
             try {
-                $serialized = $this->serializer->serialize($messageData);
-                $this->publisher->publish(self::TOPIC_NAME, $serialized);
+                 $this->publisher->publish($promoProduct);
                 $output->writeln("<info>Queued product ID {$promoProduct->getId()} ({$promoProduct->getSku()})</info>");
             } catch (\Exception $e) {
                 $output->writeln("<error>Failed to queue product ID {$promoProduct->getId()}: {$e->getMessage()}</error>");

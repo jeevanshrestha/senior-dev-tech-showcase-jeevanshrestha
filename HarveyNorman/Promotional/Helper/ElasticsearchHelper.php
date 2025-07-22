@@ -57,6 +57,7 @@ class ElasticsearchHelper implements ElasticSearchConstantsInterface
                 'template' => [
                     'mappings' => [
                         'properties' => [
+                            'id'=>['type' => 'integer'],
                             'sku' => ['type' => 'keyword'],
                             'name' => [
                                 'type' => 'text',
@@ -98,7 +99,7 @@ class ElasticsearchHelper implements ElasticSearchConstantsInterface
         ];
 
         try {
-            if (!$this->client->indices()->exists(['index' => 'promotional_index_1'])) {
+            if (!$this->client->indices()->exists(['index' => self::INDEX_NAME])) {
                 $this->client->indices()->create($params);
                 $this->logger->info('Elasticsearch index promotional_index_1 created successfully.');
             } else {
@@ -139,6 +140,46 @@ class ElasticsearchHelper implements ElasticSearchConstantsInterface
         // Check if document exists before deleting to avoid errors
         if ($this->client->exists($params)) {
             $this->client->delete($params);
+        }
+    }
+
+    /**
+     * Perform a multi_match search in Elasticsearch and return matching document IDs.
+     *
+     * @param string $query Search query string
+     * @param int $size Number of results to return
+     * @return array List of matching document IDs
+     */
+    public function search(string $query, int $size = 50): array
+    {
+        $params = [
+            'index' => self::INDEX_NAME,
+            'body' => [
+                'query' => [
+                    'multi_match' => [
+                        'query' => $query,
+                        'fields' => self::SEARCHABLE_FIELDS,
+                        'type' => 'most_fields',
+                        'fuzziness' => 2,
+                        'tie_breaker' => 0.2,
+                    ],
+                ],
+                'size' => $size,
+                '_source' => false,
+            ],
+        ];
+
+        try {
+            $response = $this->client->search($params);
+            $hits = $response['hits']['hits'] ?? [];
+
+            // Extract document IDs
+            $ids = array_map(fn($hit) => $hit['_id'] ?? null, $hits);
+
+            return array_filter($ids); // Remove nulls if any
+        } catch (\Exception $e) {
+            $this->logger->error('Elasticsearch search failed: ' . $e->getMessage());
+            return [];
         }
     }
 

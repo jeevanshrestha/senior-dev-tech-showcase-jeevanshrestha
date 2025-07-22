@@ -5,11 +5,6 @@
     <publisher topic="promotional_product_upsert">
         <connection name="amqp" exchange="harveynorman.promotional.exchange" />
     </publisher>
-
-    <publisher topic="promotional_product_delete">
-        <connection name="amqp" exchange="harveynorman.promotional.exchange" />
-    </publisher>
-
     <publisher topic="publisher_test">
         <connection name="amqp" exchange="harveynorman.promotional.exchange" />
     </publisher>
