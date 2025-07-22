@@ -48,4 +48,19 @@
         </arguments>
     </type>
 
+    <!-- Elastic Search Setup Commandline -->
+    <type name="HarveyNorman\Promotional\Console\Command\ElasticSearchIndexSetup">
+        <arguments>
+            <argument name="elasticHelper" xsi:type="object">HarveyNorman\Promotional\Helper\ElasticsearchHelper</argument>
+            <argument name="appState" xsi:type="object">Magento\Framework\App\State</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="harveynorman_promotional_elasticsearch_setup" xsi:type="object">HarveyNorman\Promotional\Console\Command\ElasticSearchIndexSetup</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
