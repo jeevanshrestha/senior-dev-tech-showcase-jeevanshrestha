@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget_file.xsd">
+
+    <widget id="promotional_products_widget" class="HarveyNorman\Promotional\Block\Product\Widget\Promotions">
+        <label translate="true">Promotional Products</label>
+        <description translate="true">Displays promotional products</description>
+        <parameters>
+            <parameter name="template" xsi:type="select" visible="true" sort_order="10" required="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default" value="HarveyNorman_Promotional::widget/promotions.phtml">
+                        <label translate="true">Default Template</label>
+                    </option> 
+                </options>
+            </parameter>
+
+            <parameter name="products_count" xsi:type="text" visible="true" sort_order="20">
+                <label translate="true">Number of Products</label>
+                <value>5</value>
+            </parameter>
+
+            <parameter name="title" xsi:type="text" visible="true" sort_order="30">
+                <label translate="true">Title</label>
+                <value>Promotional Products</value>
+            </parameter>
+        </parameters>
+
+    </widget>
+</widgets>
