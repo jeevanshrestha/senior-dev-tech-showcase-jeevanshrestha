@@ -13,7 +13,7 @@ class Search extends Template
     public function __construct(
         Template\Context $context,
         protected ElasticsearchHelper $elasticHelper,
-        protected CollectionFactory $collectionFactory,
+        protected CollectionFactory $productCollectionFactory,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -27,17 +27,22 @@ class Search extends Template
     public function getProducts()
     {
         if (!$this->searchQuery) {
-            return $this->collectionFactory->create()->addFieldToFilter('product_id', -1); // Return empty
+            return $this->productCollectionFactory->create()->addFieldToFilter('product_id', -1); // Return empty
         }
 
         $ids = $this->elasticHelper->search($this->searchQuery, 100);
         if (empty($ids)) {
-            return $this->collectionFactory->create()->addFieldToFilter('product_id', -1); // Return empty
+            return $this->productCollectionFactory->create()->addFieldToFilter('product_id', -1); // Return empty
         }
 
-        $collection = $this->collectionFactory->create()
-            ->addFieldToFilter('product_id', ['in' => $ids]);
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $collection = $this->productCollectionFactory->create()
+            ->addFieldToFilter('product_id', ['in' => $ids])
+            ->addFieldToFilter('promotion_status', 1)
+            ->addFieldToFilter('start_date', ['lteq' => $now])
+            ->addFieldToFilter('end_date', ['gteq' => $now]);
 
+        $collection->load();
         return $collection;
     }
 }

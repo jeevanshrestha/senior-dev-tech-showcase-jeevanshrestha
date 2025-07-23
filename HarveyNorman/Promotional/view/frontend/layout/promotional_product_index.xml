@@ -7,9 +7,8 @@
 			<block class="HarveyNorman\Promotional\Block\Product\Index"
 				   name="promotional.product.index"
 				   template="HarveyNorman_Promotional::product/index.phtml">
-				<!-- Set pager block and assign collection later in block class -->
-				<block class="Magento\Theme\Block\Html\Pager" name="promotional.product.pager" as="pager"/>
 			</block>
+			 
 		</referenceContainer>
 	</body>
 </page>

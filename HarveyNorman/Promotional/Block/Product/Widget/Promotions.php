@@ -28,8 +28,12 @@ class Promotions extends Template implements BlockInterface
 
     public function getProducts()
     {
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
         $size = (int)($this->getData('products_count') ?? 5);
-        $collection = $this->productCollectionFactory->create();
+        $collection = $this->productCollectionFactory->create()
+            ->addFieldToFilter('promotion_status', 1)
+            ->addFieldToFilter('start_date', ['lteq' => $now])
+            ->addFieldToFilter('end_date', ['gteq' => $now]);;
         $collection->setPageSize($size);
 
         $collection->load();

@@ -10,8 +10,6 @@ class Index extends Template
 {
     protected CollectionFactory $productCollectionFactory;
 
-    protected ?int $pageSize = null;
-    protected ?int $currentPage = null;
 
     public function __construct(
         Template\Context $context,
@@ -21,8 +19,7 @@ class Index extends Template
         parent::__construct($context, $data);
         $this->productCollectionFactory = $productCollectionFactory;
 
-        $this->pageSize = isset($data['page_size']) ? (int)$data['page_size'] : 20;
-        $this->currentPage = (int)$this->getRequest()->getParam('p', 1);
+//
     }
 
     /**
@@ -32,18 +29,14 @@ class Index extends Template
      */
     public function getProducts()
     {
-        $collection = $this->productCollectionFactory->create();
-        $collection->setPageSize($this->pageSize);
-        $collection->setCurPage((int)$this->currentPage);
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
 
-        // Assign collection to pager child block
-        if ($pager = $this->getChildBlock('pager')) {
-            $pager->setLimit($this->pageSize)
-                ->setCollection($collection);
-        }
+        $collection = $this->productCollectionFactory->create()
+            ->addFieldToFilter('promotion_status', 1)
+            ->addFieldToFilter('start_date', ['lteq' => $now])
+            ->addFieldToFilter('end_date', ['gteq' => $now]);
 
         $collection->load();
-
         return $collection;
     }
 
